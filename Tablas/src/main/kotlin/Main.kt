@@ -36,7 +36,7 @@ fun pregunta(text: String){
     var respuesta = readln()
 
 
-
+k
 
 }
 
