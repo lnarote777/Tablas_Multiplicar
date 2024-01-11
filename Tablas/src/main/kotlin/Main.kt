@@ -1,3 +1,5 @@
+import java.lang.IllegalArgumentException
+import java.lang.NumberFormatException
 import java.security.KeyStore.TrustedCertificateEntry
 import kotlin.math.max
 import kotlin.math.min
@@ -12,14 +14,24 @@ import kotlin.math.min
  */
 fun pedirNum(min: Int, max: Int): Int {
 
-    print("Introduzca un número para generar su tabla de multiplicación: ")
-    var num = readln().toInt()
 
-    while (num < min || num > max){
-        print("Número no válido.")
+    var num = min - 1
+
+
+    do{
         print("Introduzca un número para generar su tabla de multiplicación: ")
-        num = readln().toInt()
-    }
+        num = try {
+            readln().toInt()
+        } catch (e: Exception){
+            min-1
+        }
+        if (num < min || num > max ){
+            println("**Número no válido** (Pulse ENTER para continuar...)")
+            readln()
+        }
+
+    }while (num < min || num > max )
+
 
     return num
 }
@@ -33,17 +45,20 @@ fun pedirNum(min: Int, max: Int): Int {
  */
 fun pregunta(text: String): Boolean {
 
-    print(text)
-    var respuesta = readln().lowercase()
 
-    if (respuesta != "s" && respuesta != "n"){
-        println("Error - Introduce una s para sí o n para no.")
+    var respuesta :String
+
+    do {
         print(text)
         respuesta = readln().lowercase()
-        println()
-    }
 
-    val si_no = if (respuesta == "s"){
+        if (respuesta != "s" && respuesta != "n" && respuesta != "si" && respuesta != "no") {
+            println("**Respuesta no válida** (Pulse ENTER para continuar...)")
+            readln()
+        }
+    }while (respuesta != "s" && respuesta != "n" && respuesta != "si" && respuesta != "no" )
+
+    val si_no = if (respuesta == "s" || respuesta == "si"){
         true
     }else{
         false
@@ -57,16 +72,18 @@ fun main() {
     //Hasta que se responda negativamente a la pregunta "¿Desea generar otra tabla de multiplicación? (s/n)"
 
 
-    do{
-        val num = pedirNum(min = 1, max = 100)
+        do{
+            val num = pedirNum(min = 1, max = 100)
 
-        val tablas = Array<String>(11){i -> "$i x $num = ${num * i}"}
-        for (linea in tablas){
-            println(linea)
-        }
+            val tablas = Array<String>(11){"$it x $num = ${num * it}"}
+            for (linea in tablas){
+                println(linea)
+            }
 
-        val respuesta = pregunta(text = "¿Desea generar otra tabla de multiplicación? (s/n)" )
+            val respuesta = pregunta(text = "¿Desea generar otra tabla de multiplicación? (s/n)" )
 
-    }while (respuesta)
+        }while (respuesta)
+
+
 
 }
